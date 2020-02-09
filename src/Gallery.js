@@ -4,7 +4,7 @@ import PICTURES from './data/pictures';
 function Gallery(){
   const [ index, setIndex ] = useState(0);
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       // index set to 0 by closure from useEffect, so needs another callback to get latest value
       setIndex(
         storedIndex => {
@@ -12,6 +12,10 @@ function Gallery(){
         }
       )
     }, 3000);
+    // callback => clean up queued interval in case of unmount (cf componentDidUnmount?)
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
