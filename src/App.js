@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import Joke from './Joke';
 import Stories from './Stories';
+import Tasks from './Tasks';
 
 function App() {
   const [userQuery, setUserQuery] = useState('');
 
   const updateUserQuery = e => {
-    console.log(e.target.value)
     e.preventDefault();
+    // async & not blocking so console log runs before it's finished - hence console log always one step 'behind'
+    // React Engine keeps track internally - updates when setUserQuery ends: state variable has changed, prompts rerender
     setUserQuery(e.target.value);
+    console.log(e.target.value)
+
   }
 
   const handleKeyPress = e => {
@@ -30,6 +34,8 @@ function App() {
       </form>
       <hr />
       <Joke />
+      <hr />
+      <Tasks />
       <hr />
       <Stories />
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+// 2 renders => initial value, resolved value (async fetch result)
 const useFetch = (url, initialValue) => {
   const [result, setResult] = useState(initialValue);
   useEffect(() => {
