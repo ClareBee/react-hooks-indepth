@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import useFetch from './hooks';
+import React from 'react';
+import { useFetch } from './hooks';
 
 function Stories(){
   const stories = useFetch(`https://news-proxy-server.appspot.com/topstories`, []);

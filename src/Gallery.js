@@ -1,30 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PICTURES from './data/pictures';
+import { useDynamicTransition } from './hooks';
 
 const SECONDS = 1000;
 const MINIMUM_DELAY = 1000;
 const MINIMUM_INCREMENT = 1;
 
 function Gallery(){
-  const [ index, setIndex ] = useState(0);
   const [ delay, setDelay ] = useState(3 * SECONDS);
   const [ increment, setIncrement ] = useState(1);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // index set to 0 by closure from useEffect, so needs another callback to get latest value
-      setIndex(
-        storedIndex => {
-          return (storedIndex+increment)%PICTURES.length
-        }
-      )
-    }, delay);
-    // callback => clean up queued interval in case of unmount (cf componentDidUnmount?)
-    return () => {
-      clearInterval(interval);
-    };
-  }, [delay, increment]); // rerun when delay changes!
-
+  const index = useDynamicTransition({ delay, increment, length: PICTURES.length});
   const updateDelay = event => {
     const delay = Number(event.target.value) * SECONDS;
     setDelay(delay < MINIMUM_DELAY ? MINIMUM_DELAY : delay); // convert to milliseconds
