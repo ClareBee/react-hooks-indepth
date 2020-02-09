@@ -14,7 +14,17 @@ function Tasks(){
     setTasks([...tasks, { taskText, id: uuid()}]);
   }
 
+// return function to stop inline execution
+  const completeTask = completedTask => () => {
+    setCompletedTasks([...completedTasks, completedTask]);
+    setTasks(tasks.filter(task => task.id !== completedTask.id));
+  }
+
+  const deleteTask = taskToDelete => () => {
+    setCompletedTasks(completedTasks.filter(task => task.id !== taskToDelete.id));
+  }
   console.log('tasks', tasks)
+  console.log('completed', completedTasks)
 
   return (
     <div>
@@ -26,8 +36,27 @@ function Tasks(){
       <div className="task-list">
       {tasks.map(task => {
         const { id, taskText } = task;
-        return <div key={id}>{taskText}</div>
+        return (
+          <div
+            key={id}
+            onClick={completeTask(task)}>
+            {taskText}
+          </div>
+        )
       })
+      }
+      </div>
+      <div className="completed-list">
+      {completedTasks.map(task => {
+        const { id, taskText } = task;
+        return (
+          <div key={id}>
+            {taskText}{' '}
+            <span className="delete-task" onClick={deleteTask(task)}>&times;</span>
+          </div>
+        )
+      })
+
       }
       </div>
     </div>
