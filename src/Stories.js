@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import useFetch from './hooks';
 
 function Stories(){
-  const [stories, setStories] = useState([]);
-  useEffect(() => {
-    const url = `https://news-proxy-server.appspot.com/topstories`;
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
-        setStories(data)
-      })
-  }, []);
-
-
+  const stories = useFetch(`https://news-proxy-server.appspot.com/topstories`, []);
   const renderStories = () => stories.map(story => {
     const { id, score, by, title, url, time } = story;
+
     return (
       <li key={id}>
         <a href={url} target="_blank" rel="noopener noreferrer">
