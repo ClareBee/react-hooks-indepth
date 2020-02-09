@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 function Joke(){
   const [joke, setJoke] = useState({});
-  // callback fn fires after every render cf componentDidMount
+  // callback fn fires after every render cf componentDidMount & componentDidUpdate
   useEffect(() => {
     const url = `https://official-joke-api.appspot.com/jokes/random`
     fetch(url)
