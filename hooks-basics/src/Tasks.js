@@ -1,5 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import uuid from 'uuid/v4'; // based on timestamp & randomly generated numbers
+
+const initialTasksState = {
+  tasks: [],
+  completedTasks: []
+}
+
+const TYPES = {
+  ADD_TASK: 'ADD_TASK',
+  DELETE_TASK: 'DELETE_TASK',
+  COMPLETE_TASK: 'COMPLETE_TASK'
+}
+//reducer returns relevant state for component
+const tasksReducer = (state, action) => {
+  console.log('state', state)
+  console.log('action', action)
+  switch(action.type){
+    case TYPES.ADD_TASK:
+      return {
+        ...state,
+        tasks: [...state.tasks, action.task]
+      }
+    case TYPES.COMPLETE_TASK:
+    const { completedTask } = action;
+      return {
+        ...state,
+        completedTasks: [ ...state.completedTasks, completedTask],
+        tasks: state.tasks.filter(task => task.id !== completedTask.id)
+      }
+    case TYPES.DELETE_TASK:
+      const { taskToDelete } = action;
+      return {
+        ...state,
+        completedTasks: state.completedTasks.filter(task => task.id !== taskToDelete.id)
+      }
+
+    default:
+      return state
+  }
+};
 
 const TASKS_STORAGE_KEY = 'TASKS_STORAGE_KEY';
 // helper method
@@ -12,13 +51,15 @@ const storeTasks = (taskMap) => {
 
 const readStoreTasks = () => {
   const tasksMap = JSON.parse(localStorage.getItem(TASKS_STORAGE_KEY));
-  return tasksMap ? tasksMap : { tasks: [], completedTasks: [] };
+  return tasksMap ? tasksMap : initialTasksState;
 }
 function Tasks(){
   const [taskText, setTaskText] = useState('');
   const storedTasks = readStoreTasks();
-  const [tasks, setTasks] = useState(storedTasks.tasks);
-  const [completedTasks, setCompletedTasks] = useState(storedTasks.completedTasks);
+
+// dispatch triggers the reducer
+  const [state, dispatch] = useReducer(tasksReducer, storedTasks);
+  const { tasks, completedTasks } = state;
 
 // called after rerender - rerenders on state change => latest state of tasks
   useEffect(() => {
@@ -30,20 +71,17 @@ function Tasks(){
   }
 
   const addTask = () => {
-    setTasks([...tasks, { taskText, id: uuid()}]);
+    dispatch({ type: TYPES.ADD_TASK, task: { id: uuid(), taskText }});
   }
 
 // return function to stop inline execution
   const completeTask = completedTask => () => {
-    setCompletedTasks([...completedTasks, completedTask]);
-    setTasks(tasks.filter(task => task.id !== completedTask.id));
+    dispatch({ type: TYPES.COMPLETE_TASK, completedTask });
   }
 
   const deleteTask = taskToDelete => () => {
-    setCompletedTasks(completedTasks.filter(task => task.id !== taskToDelete.id));
+    dispatch({ type: TYPES.DELETE_TASK, taskToDelete })
   }
-  console.log('tasks', tasks)
-  console.log('completed', completedTasks)
 
   return (
     <div>
