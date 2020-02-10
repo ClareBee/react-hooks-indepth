@@ -4,7 +4,7 @@ import { newMessage } from '../state/actions';
 
 function PublishMessage(){
   // make sure yr using right context
-  const { dispatch } = useAppContext();
+  const { pubsub: { publish } } = useAppContext();
   const [ text, setText ] = useState('');
 
   const updateText = event => {
@@ -12,7 +12,7 @@ function PublishMessage(){
   }
 
   const publishMessage = () => {
-    dispatch(newMessage(text));
+    publish(newMessage(text));
   }
 
   const handleKeyPress = event => {

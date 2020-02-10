@@ -1,23 +1,20 @@
 import PubNub from 'pubnub';
 import pubNubConfig from './pubnub.config';
 
-const pubNub = new PubNub(pubNubConfig);
 
 export const MESSAGE_CHANNEL = 'MESSAGE_CHANNEL';
 
-pubNub.subscribe({ channels: [MESSAGE_CHANNEL] });
-
-pubNub.addListener({
-  message: messageObject => {
-    console.log('msg', messageObject)
+function PubSub(){
+  const pubNub = new PubNub(pubNubConfig);
+  pubNub.subscribe({ channels: [MESSAGE_CHANNEL] });
+  this.addListener = listenerConfig => {
+    pubNub.addListener(listenerConfig);
   }
-});
 
-// forces order re: async fns
-setTimeout(() => {
-  // first call creates the channel in the cloud
-  pubNub.publish({
-    message: 'foo',
-    channel: MESSAGE_CHANNEL
-  })
-}, 1000);
+  this.publish = message => {
+    console.log('publishing', message)
+    pubNub.publish({ message, channel: MESSAGE_CHANNEL })
+  }
+}
+
+export default PubSub;
