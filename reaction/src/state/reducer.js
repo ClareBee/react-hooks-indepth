@@ -42,7 +42,6 @@ const reducer = (state, action ) => {
         ...state,
         username: action.username
       }
-    case REACT
     default:
       return state
   }
