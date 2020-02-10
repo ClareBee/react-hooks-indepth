@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import reducer, { initialState } from '../state/reducer';
+import '../pubsub';
 import Context from '../context';
 
 import PublishMessage from './PublishMessage';
