@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import Context from '../context';
 
-function MessageBoard({ messages }){
+function MessageBoard(){
+  // inner destructuring
+  const { state: { messages } } = useContext(Context);
   return(
     <div>
     {messages.map(message => {
