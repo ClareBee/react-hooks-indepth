@@ -3,14 +3,12 @@ import reducer, { initialState } from '../state/reducer';
 import PubSub from '../pubsub';
 import Context from '../context';
 
+import SetUsername from './SetUsername';
 import PublishMessage from './PublishMessage';
 import MessageBoard from './MessageBoard';
 
 const pubsub = new PubSub(); // new is what provides the 'this'
 
-setTimeout(() => {
-  pubsub.publish({ type: 'foo', value: 'bar'})
-}, 1000);
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -26,6 +24,8 @@ function App() {
   return (
     <Context.Provider value={{ state, dispatch, pubsub }}>
       <h1>Reaction</h1>
+
+      <SetUsername />
       <hr />
       <PublishMessage />
       <hr />
